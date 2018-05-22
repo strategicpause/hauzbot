@@ -1,23 +1,24 @@
-const https = require('https');
+const request = require('request');
 const url = require('url');
 
-const CLIP_URL = 'https://clips.twitch.tv/twitch/';
+const CLIP_URL = 'https://clips.twitch.tv/';
 
-var clip = function(broadcasterId, authKey, completeCb) {
+const clip = function(broadcasterId, authKey, onSuccess) {
 	const options = {
-	  hostname: 'api.twitch.tv',
-	  path: '/helix/clips?broadcaster_id=' + broadcasterId,
-	  method: 'POST',
+	  url: 'https://api.twitch.tv/helix/clips?broadcaster_id=' + broadcasterId,
 	  headers: {
-	    'Authorization: Bearer': authKey,
+	    'Authorization': 'Bearer ' + authKey,
 	  }
 	};
-	https.request(options, (res) => {
-		res.on('data', (d) => {
-			var clipId = data['data'][0]['id'];
-			var editUrl = data['data'][0]['edit_url'];
-			completeCb(CLIP_URL + clipId, editUrl);
-		});
+	request.post(options, (err, response, body) => {
+		if (!err) {
+			const body = JSON.parse(response.body);
+			const clipId = body['data'][0]['id'];
+			const editUrl = body['data'][0]['edit_url'];
+			onSuccess(CLIP_URL + clipId, editUrl);
+		} else {
+			console.log(err);
+		}
 	});
 };
 
