@@ -1,7 +1,7 @@
 const Alexa = require('alexa-sdk');
 const twitchClient = require('./twitch-client');
-const BROADCASTER_ID = '';
-const AUTH_KEY = '';
+const TwitchBot = require('./irc-client')
+const ircClient = new TwitchBot(process.env.USERNAME, process.env.PASSWORD, process.env.CHANNEL);
 
 var handlers = {
   'LaunchRequest': function() {
@@ -10,9 +10,9 @@ var handlers = {
   },
   'ClipIntent': function() {
     console.log('ClipIntent invoked');
-    twitchClient.clip(BROADCASTER_ID, AUTH_KEY, function(clipUrl, editUrl) {
-      console.log("Clip URL: " + clipUrl);
-      console.log("Edit URL: " + editUrl);
+    twitchClient.clip(process.env.BROADCASTER_ID, process.env.AUTH_KEY, function(clipUrl, editUrl) {
+      ircClient.message(process.env.CHANNEL, "Clip URL: " + clipUrl);
+      ircClient.whisper(process.env.OWNER, "Edit URL: " + editUrl);
     });
     this.emit(":tell", 'Taking a clip.');
   },
@@ -22,11 +22,9 @@ var handlers = {
   },
 };
 
-const APP_ID = '';
-
 exports.handler = function(event, context, callback) {
   var alexa = Alexa.handler(event, context);
-  alexa.APP_ID = APP_ID;
+  alexa.appId = process.env.APP_ID;
   alexa.registerHandlers(handlers);
   alexa.execute();
 };
