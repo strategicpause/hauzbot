@@ -6,7 +6,7 @@ const ircClient = new TwitchBot(process.env.USERNAME, process.env.PASSWORD, proc
 var handlers = {
   'LaunchRequest': function() {
     console.log('launch request');
-    this.emit(":ask", 'To take a clip, ask me to clip it.');
+    this.emit(":ask", '');
   },
   'ClipIntent': function() {
     console.log('ClipIntent invoked');
