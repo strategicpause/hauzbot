@@ -5,7 +5,7 @@ const CLIP_URL = 'https://clips.twitch.tv/';
 
 const clip = function(broadcasterId, authKey, onSuccess) {
 	const options = {
-	  url: 'https://api.twitch.tv/helix/clips?broadcaster_id=' + broadcasterId,
+	  url: 'https://api.twitch.tv/helix/clips?has_delay=true&broadcaster_id=' + broadcasterId,
 	  headers: {
 	    'Authorization': 'Bearer ' + authKey,
 	  }

@@ -13,6 +13,7 @@ app.get('/', function(req, res) {
 });
 
 app.post('/', function(req, res) {
+    if (req.body.session.user.userId != process.env.WHITELIST) return;
     if (DEBUG) {
         console.log("######################## Request from Alexa ########################");
         console.log(req.body);
