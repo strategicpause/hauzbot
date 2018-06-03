@@ -13,9 +13,13 @@ const clip = function(broadcasterId, authKey, onSuccess) {
 	request.post(options, (err, response, body) => {
 		if (!err) {
 			const parsedBody = JSON.parse(body);
-			const clipId = parsedBody['data'][0]['id'];
-			const editUrl = parsedBody['data'][0]['edit_url'];
-			onSuccess(CLIP_URL + clipId, editUrl);
+			if (!parsedBody.error) {
+				const clipId = parsedBody['data'][0]['id'];
+				const editUrl = parsedBody['data'][0]['edit_url'];
+				onSuccess(CLIP_URL + clipId, editUrl);
+			} else {
+				console.log(parsedBody);
+			}
 		} else {
 			console.log(err);
 		}
